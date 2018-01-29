@@ -143,10 +143,10 @@ class Screen {
     void advance_ball(Ball &b, Player &p1, Player &p2) {
       leds[b.get_position()] = CRGB::Black;
       
-      for (uint8_t i=p1.hitbox_min; i<p1.hitbox_max; i++) {
+      for (uint8_t i=p1.hitbox_min; i<=p1.hitbox_max; i++) {
         leds[i] = CRGB::Green;
       }
-      for (uint8_t i=p2.hitbox_min; i<p2.hitbox_max; i++) {
+      for (uint8_t i=p2.hitbox_min; i<=p2.hitbox_max; i++) {
         leds[i] = CRGB::Blue;
       }
       
@@ -165,6 +165,10 @@ Ball ball;
 void setup() {
   player_1.button.set_pin(PLAYER1_PIN);
   player_2.button.set_pin(PLAYER2_PIN);
+  player_1.hitbox_min=0;
+  player_1.hitbox_max=7;
+  player_2.hitbox_min=NUM_LEDS-9;
+  player_2.hitbox_max=NUM_LEDS-1;
   restart.set_pin(RESTART_PIN);
   screen.init();
   ball.init(0,0.2,1);
