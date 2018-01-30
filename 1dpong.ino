@@ -24,24 +24,40 @@ class Button {
     };
   
   private:
-    ButtonState current_state, last_state;
+    ButtonState current_state;
     uint8_t pin;
-    unsigned long timer;
+    bool lock;
+    unsigned long time;
+    unsigned long lock_time;
 
     void update_state(){
-      last_state = current_state;
+      /*
       if ( digitalRead(pin) == LOW ) {
         current_state = BUTTON_RELEASED;
       } else {
-        current_state = BUTTON_PRESSED;
+        if ( millis() - time >= lock_time ){
+          current_state = BUTTON_PRESSED;
+          time = millis();
+        } else {
+          current_state = BUTTON_RELEASED;
+        }
+      }
+*/
+      if ( digitalRead(pin) == HIGH && millis() - time >= lock_time ) {
+          current_state = BUTTON_PRESSED;
+          time = millis();
+      } else {
+        current_state = BUTTON_RELEASED;
       }
     }
 
   public:
-    uint8_t set_pin (uint8_t p) {
+    void set_pin (uint8_t p) {
       pin = p;
       pinMode(p, INPUT);
-      return p;
+    }
+    void set_lock_time(double t) {
+      lock_time = t;
     }
     bool is_pressed() {
       update_state();
@@ -172,6 +188,8 @@ Ball ball;
 void setup() {
   player_1.button.set_pin(PLAYER1_PIN);
   player_2.button.set_pin(PLAYER2_PIN);
+  player_1.button.set_lock_time(1000);
+  player_2.button.set_lock_time(1000);
   player_1.hitbox_min=0;
   player_1.hitbox_max=7;
   player_2.hitbox_min=NUM_LEDS-9;
@@ -182,7 +200,7 @@ void setup() {
   screen.init();
   ball.init(0,0.2,1);
 
-//  Serial.begin( 9600 );
+  Serial.begin( 9600 );
 }
 
 void loop() {
@@ -199,5 +217,14 @@ void loop() {
 */
   if (ball.timer()) {
     screen.advance_ball(ball, player_1, player_2);
+  }
+
+  if (player_1.button.is_pressed() && ball.is_inside_hitbox(player_1)) {
+    Serial.println("P1");
+    ball.reverse_direction();
+  }
+  if (player_2.button.is_pressed() && ball.is_inside_hitbox(player_2)) {
+    Serial.println("P2");
+    ball.reverse_direction();
   }
 }
