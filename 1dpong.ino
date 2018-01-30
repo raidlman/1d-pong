@@ -31,18 +31,6 @@ class Button {
     unsigned long lock_time;
 
     void update_state(){
-      /*
-      if ( digitalRead(pin) == LOW ) {
-        current_state = BUTTON_RELEASED;
-      } else {
-        if ( millis() - time >= lock_time ){
-          current_state = BUTTON_PRESSED;
-          time = millis();
-        } else {
-          current_state = BUTTON_RELEASED;
-        }
-      }
-*/
       if ( digitalRead(pin) == HIGH && millis() - time >= lock_time ) {
           current_state = BUTTON_PRESSED;
           time = millis();
@@ -72,6 +60,7 @@ struct Player {
   uint8_t lifes;
   uint8_t hitbox_min;
   uint8_t hitbox_max;
+  uint8_t boundary;
   CRGB color;
   Button button;
 };
@@ -81,17 +70,22 @@ class Ball {
   
     int8_t position;
     double speed;
+    double speedup = 0.0;
     int8_t direction;
     unsigned long time;
 
     uint8_t distance_to_field_boundary (Player &player) {
-      return abs(player.hitbox_min - position);
+      if ( position > 29 ) {
+        return position - player.hitbox_min;
+      } else {
+        return player.hitbox_max - position;
+      }
     }
     
     // convert speed (in m/s) to timer delay
     uint16_t speed_to_timer() {
-      double s = speed; // + ball.speedup;
-      return (uint16_t)(STRIPE_LENGTH*1000 / ((NUM_LEDS)*speed));
+      double s = speed + speedup;
+      return (uint16_t)(STRIPE_LENGTH*1000 / ((NUM_LEDS)*s));
     }
     
   public:
@@ -133,16 +127,17 @@ class Ball {
     void reverse_direction() {
       direction *= -1;
     }
-    /*
-    void advance() {
-      position += direction;
-    }*/
+
+    void calc_speedup(Player p) {
+      speedup = distance_to_field_boundary(p)/10.0;
+      Serial.println(speedup);
+    }
 };
 
 class Screen {
   private:
     // Global variables
-    CRGB leds[NUM_LEDS-1];
+    CRGB leds[NUM_LEDS];
 
     void draw_player_score(Player p){
       for (uint8_t i=p.hitbox_min; i<=p.hitbox_max; i++) {
@@ -179,6 +174,19 @@ class Screen {
     }
 };
 
+enum class Pong {
+  IDLE = 0,
+  DEMO,
+  PLAY,
+  WIN
+} pong;
+
+enum class Match {
+  SERVE_P1 = 0,
+  SERVE_P2
+  
+} match;
+
 Player player_1;
 Player player_2;
 Button restart;
@@ -192,8 +200,10 @@ void setup() {
   player_2.button.set_lock_time(1000);
   player_1.hitbox_min=0;
   player_1.hitbox_max=7;
+  player_1.boundary=0;
   player_2.hitbox_min=NUM_LEDS-9;
   player_2.hitbox_max=NUM_LEDS-1;
+  player_2.boundary=NUM_LEDS-9;
   player_1.color = CRGB::Green;
   player_2.color = CRGB::Blue;
   restart.set_pin(RESTART_PIN);
@@ -201,30 +211,20 @@ void setup() {
   ball.init(0,0.2,1);
 
   Serial.begin( 9600 );
+  Serial.println("Starting Pong!");
 }
 
 void loop() {
-/*
-  if (player_1.button.is_pressed()) {
-    Serial.println("Button P1 pressed!");
-  }
-  if (player_2.button.is_pressed()) {
-    Serial.println("Button P2 pressed!");
-  }
-  if (restart.is_pressed()) {
-    Serial.println("Button Restart pressed!");
-  }
-*/
+  
   if (ball.timer()) {
     screen.advance_ball(ball, player_1, player_2);
   }
-
   if (player_1.button.is_pressed() && ball.is_inside_hitbox(player_1)) {
-    Serial.println("P1");
     ball.reverse_direction();
+    ball.calc_speedup(player_1);
   }
   if (player_2.button.is_pressed() && ball.is_inside_hitbox(player_2)) {
-    Serial.println("P2");
     ball.reverse_direction();
+    ball.calc_speedup(player_2);
   }
 }
