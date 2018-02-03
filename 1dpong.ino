@@ -147,6 +147,21 @@ class Screen {
     // Global variables
     CRGB leds[NUM_LEDS];
 
+    void init() {
+      // set chipset type, color order of LEDs and number of LEDs on stripe
+      FastLED.addLeds<LED_TYPE, LED_COLOR_ORDER>(leds, NUM_LEDS);
+      
+      // set global brightness
+      FastLED.setBrightness( BRIGHTNESS );
+      
+      // turn off all LEDs
+      for (uint8_t i=0; i<NUM_LEDS; i++){
+        leds[i] = CRGB::Black;
+      }
+       
+      FastLED.show();
+    }
+
     void draw_player_score(Player p){
       for (uint8_t i=p.hitbox_min; i<=p.hitbox_max; i++) {
         if ( i < 29 ) {
@@ -166,20 +181,8 @@ class Screen {
     }
     
   public:
-  
-    void init() {
-      // set chipset type, color order of LEDs and number of LEDs on stripe
-      FastLED.addLeds<LED_TYPE, LED_COLOR_ORDER>(leds, NUM_LEDS);
-      
-      // set global brightness
-      FastLED.setBrightness( BRIGHTNESS );
-      
-      // turn off all LEDs
-      for (uint8_t i=0; i<NUM_LEDS; i++){
-        leds[i] = CRGB::Black;
-      }
-       
-      FastLED.show();
+    Screen() {
+      init();
     }
     
     void advance_ball(Ball &b, Player &p1, Player &p2) {
@@ -228,7 +231,6 @@ void setup() {
   player_2.lost_lifes_color = CRGB::Black;
   
   restart.set_pin(RESTART_PIN);
-  screen.init();
   ball.init(0,0.2,1);
 
   Serial.begin( 9600 );
