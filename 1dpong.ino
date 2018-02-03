@@ -5,17 +5,16 @@
 #include <FastLED.h>
 
 // FastLED settings
-#define NUM_LEDS 60 // max. 256
-#define STRIPE_LENGTH 1.0 // LED length in m
-#define LED_COLOR_ORDER BGR
-#define LED_TYPE APA102
-#define BRIGHTNESS 64
-#define MAX_BRIGHTNESS 255
+const uint8_t NUM_LEDS=60;
+const double STRIPE_LENGTH=1.0;
+const EOrder LED_COLOR_ORDER=BGR;
+const ESPIChipsets LED_TYPE=APA102;
+const uint8_t BRIGHTNESS=64; //max. 255
 
 // Digital pins settings
-#define RESTART_PIN 7
-#define PLAYER1_PIN 8
-#define PLAYER2_PIN 9
+const uint8_t RESTART_PIN=7;
+const uint8_t PLAYER1_PIN=8;
+const uint8_t PLAYER2_PIN=9;
 
 class Button {
   enum ButtonState {
@@ -197,9 +196,7 @@ class Screen {
 
 enum class Pong {
   IDLE = 0,
-  DEMO,
-  PLAY,
-  WIN
+  PLAY
 } pong;
 
 enum class Match {
@@ -239,7 +236,6 @@ void setup() {
 }
 
 void loop() {
-  
   if (ball.timer()) {
     screen.advance_ball(ball, player_1, player_2);
   }
