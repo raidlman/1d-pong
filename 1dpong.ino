@@ -3,6 +3,7 @@
  */
 
 #include <FastLED.h>
+#include "Button.h"
 
 // FastLED settings
 const uint8_t NUM_LEDS=60;
@@ -16,44 +17,7 @@ const uint8_t RESTART_PIN=7;
 const uint8_t PLAYER1_PIN=8;
 const uint8_t PLAYER2_PIN=9;
 
-class Button {
-  enum ButtonState {
-      BUTTON_RELEASED = 0,
-      BUTTON_PRESSED
-    };
-  
-  private:
-    ButtonState current_state;
-    uint8_t pin;
-    bool lock;
-    unsigned long time;
-    unsigned long lock_time;
 
-    void update_state(){
-      if ( digitalRead(pin) == HIGH && millis() - time >= lock_time ) {
-          current_state = BUTTON_PRESSED;
-          time = millis();
-      } else {
-        current_state = BUTTON_RELEASED;
-      }
-    }
-
-  public:
-    void set_pin (uint8_t p) {
-      pin = p;
-      pinMode(p, INPUT);
-    }
-    void set_lock_time(double t) {
-      lock_time = t;
-    }
-    bool is_pressed() {
-      update_state();
-      if ( current_state == BUTTON_PRESSED ) {
-        return true;
-      }
-      return false;
-    }
-};
 
 struct Player {
   uint8_t lifes = 8;
