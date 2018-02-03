@@ -94,12 +94,16 @@ class Ball {
     void increase_speed() {
       speed *= 1.05;
     }
-    
-  public:
+
     void init(int8_t p, double s, int8_t d) {
       position = p;
       speed = s;
       direction = d;
+    }
+    
+  public:
+    Ball() {
+      init(0,0.2,1);
     }
   
     bool is_inside_hitbox(Player &player) {
@@ -211,6 +215,7 @@ enum class Match {
 Player player_1;
 Player player_2;
 Button restart;
+
 Screen screen;
 Ball ball;
 
@@ -231,7 +236,6 @@ void setup() {
   player_2.lost_lifes_color = CRGB::Black;
   
   restart.set_pin(RESTART_PIN);
-  ball.init(0,0.2,1);
 
   Serial.begin( 9600 );
   Serial.println("Starting Pong!");
