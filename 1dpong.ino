@@ -57,11 +57,11 @@ class Button {
 };
 
 struct Player {
-  uint8_t lifes;
+  uint8_t lifes = 8;
   uint8_t hitbox_min;
   uint8_t hitbox_max;
-  uint8_t hit_boundary;
-  CRGB color;
+  CRGB lifes_color;
+  CRGB lost_lifes_color;
   Button button;
 };
 
@@ -150,7 +150,19 @@ class Screen {
 
     void draw_player_score(Player p){
       for (uint8_t i=p.hitbox_min; i<=p.hitbox_max; i++) {
-        leds[i] = p.color;
+        if ( i < 29 ) {
+          if ( i < (8 - p.lifes)) {
+            leds[i] = p.lost_lifes_color;
+          } else {
+            leds[i] = p.lifes_color;
+          }
+        } else {
+          if ( i <= ( 51 + p.lifes )) {
+            leds[i] = p.lifes_color;
+          } else {
+            leds[i] = p.lost_lifes_color;
+          }
+        }
       }
     }
     
@@ -207,14 +219,17 @@ void setup() {
   player_2.button.set_pin(PLAYER2_PIN);
   player_1.button.set_lock_time(1000);
   player_2.button.set_lock_time(1000);
+  
   player_1.hitbox_min=0;
   player_1.hitbox_max=7;
-  player_1.hit_boundary=0;
-  player_2.hitbox_min=NUM_LEDS-9;
+  player_2.hitbox_min=NUM_LEDS-8;
   player_2.hitbox_max=NUM_LEDS-1;
-  player_2.hit_boundary=NUM_LEDS-9;
-  player_1.color = CRGB::Green;
-  player_2.color = CRGB::Blue;
+  
+  player_1.lifes_color = CRGB::Green;
+  player_1.lost_lifes_color = CRGB::Black;
+  player_2.lifes_color = CRGB::Blue;
+  player_2.lost_lifes_color = CRGB::Black;
+  
   restart.set_pin(RESTART_PIN);
   screen.init();
   ball.init(0,0.2,1);
