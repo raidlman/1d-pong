@@ -4,6 +4,9 @@
 
 #include <FastLED.h>
 #include "Button.h"
+#include "Ball.h"
+#include "Player.h"
+#include "Screen.h"
 
 // FastLED settings
 const uint8_t NUM_LEDS=60;
@@ -17,163 +20,6 @@ const uint8_t RESTART_PIN=7;
 const uint8_t PLAYER1_PIN=8;
 const uint8_t PLAYER2_PIN=9;
 
-
-
-struct Player {
-  uint8_t lifes = 8;
-  uint8_t hitbox_min;
-  uint8_t hitbox_max;
-  bool serve;
-  unsigned long time = 0;
-  unsigned long serve_time = 3000;
-  CRGB lifes_color;
-  CRGB lost_lifes_color;
-  Button button;
-};
-
-class Ball {
-  private:
-  
-    int8_t position;
-    double speed;
-    double speedup = 0.0;
-    int8_t direction;
-    unsigned long time;
-
-    uint8_t distance_to_field_boundary (Player &player) {
-      if ( position > 29 ) {
-        return position - player.hitbox_min;
-      } else {
-        return player.hitbox_max - position;
-      }
-    }
-    
-    // convert speed (in m/s) to timer delay
-    uint16_t speed_to_timer() {
-      double s = speed + speedup;
-      return (uint16_t)(STRIPE_LENGTH*1000 / ((NUM_LEDS)*s));
-    }
-
-    void reverse_direction() {
-      direction *= -1;
-    }
-
-    void increase_speed() {
-      speed *= 1.05;
-    }
-  
-    void init(int8_t p, double s, int8_t d) {
-      position = p;
-      speed = s;
-      direction = d;
-    }
-    
-  public:
-    Ball() {
-      init(0,0.2,1);
-    }
-
-    bool is_inside_hitbox(Player &player) {
-      if ( player.hitbox_min <= position && position <= player.hitbox_max ) {
-        return true;
-      }
-      return false;
-    }
-    
-    bool timer() {
-      if ( millis() - time >= speed_to_timer() ) {
-        //Serial.println(time);
-        //Serial.println(millis() - time);
-        time = millis();
-        return true;
-      }
-      return false;
-    }
-
-    int8_t get_position() {
-      return position;
-    }
-    
-    void set_position(int8_t p) {
-      position = p;
-    }
-
-    int8_t get_direction() {
-      return direction;
-    }
-
-    void hit() {
-      reverse_direction();
-      increase_speed();
-    }
-
-    void calc_speedup(Player p) {
-      speedup = distance_to_field_boundary(p)/10.0;
-      Serial.println(speedup);
-    }
-};
-
-class Screen {
-  private:
-    // Global variables
-    CRGB leds[NUM_LEDS];
-
-    void init() {
-      // set chipset type, color order of LEDs and number of LEDs on stripe
-      FastLED.addLeds<LED_TYPE, LED_COLOR_ORDER>(leds, NUM_LEDS);
-      
-      // set global brightness
-      FastLED.setBrightness( BRIGHTNESS );
-      
-      // turn off all LEDs
-      for (uint8_t i=0; i<NUM_LEDS; i++){
-        leds[i] = CRGB::Black;
-      }
-       
-      FastLED.show();
-    }
-
-    void draw_player_score(Player p){
-      for (uint8_t i=p.hitbox_min; i<=p.hitbox_max; i++) {
-        if ( i < 29 ) {
-          if ( i < (8 - p.lifes)) {
-            leds[i] = p.lost_lifes_color;
-          } else {
-            leds[i] = p.lifes_color;
-          }
-        } else {
-          if ( i <= ( 51 + p.lifes )) {
-            leds[i] = p.lifes_color;
-          } else {
-            leds[i] = p.lost_lifes_color;
-          }
-        }
-      }
-    }
-    
-  public:
-    Screen() {
-      init();
-    }
-
-    void show_score(Player &p1, Player &p2) {
-      draw_player_score(p1);
-      draw_player_score(p2);
-      FastLED.show();
-    }
-    
-    void advance_ball(Ball &b, Player &p1, Player &p2) {
-      leds[b.get_position()] = CRGB::Black;
-      
-      draw_player_score(p1);
-      draw_player_score(p2);
-      
-      b.set_position(b.get_position() + b.get_direction());
-      leds[b.get_position()] = CRGB::White;
-      FastLED.show();
-    }
-};
-
 enum State {
   IDLE = 0,
   DEMO,
@@ -185,7 +31,7 @@ enum State {
 Player player_1;
 Player player_2;
 Button restart;
-Screen screen;
+Screen screen(BRIGHTNESS, NUM_LEDS);
 Ball ball;
 State state = IDLE;
 
@@ -253,3 +99,4 @@ void setup() {
 void loop() {
   game_logic();
 }
+

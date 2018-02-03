@@ -24,7 +24,7 @@ class Button {
     void update_state();
 
   public:
-    void set_pin (uint8_t p);
+    void set_pin(uint8_t p);
     void set_lock_time(double t);
     bool is_pressed();
 };
