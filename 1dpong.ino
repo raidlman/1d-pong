@@ -60,7 +60,7 @@ struct Player {
   uint8_t lifes;
   uint8_t hitbox_min;
   uint8_t hitbox_max;
-  uint8_t boundary;
+  uint8_t hit_boundary;
   CRGB color;
   Button button;
 };
@@ -86,6 +86,14 @@ class Ball {
     uint16_t speed_to_timer() {
       double s = speed + speedup;
       return (uint16_t)(STRIPE_LENGTH*1000 / ((NUM_LEDS)*s));
+    }
+
+    void reverse_direction() {
+      direction *= -1;
+    }
+
+    void increase_speed() {
+      speed *= 1.05;
     }
     
   public:
@@ -124,8 +132,9 @@ class Ball {
       return direction;
     }
 
-    void reverse_direction() {
-      direction *= -1;
+    void hit() {
+      reverse_direction();
+      increase_speed();
     }
 
     void calc_speedup(Player p) {
@@ -200,10 +209,10 @@ void setup() {
   player_2.button.set_lock_time(1000);
   player_1.hitbox_min=0;
   player_1.hitbox_max=7;
-  player_1.boundary=0;
+  player_1.hit_boundary=0;
   player_2.hitbox_min=NUM_LEDS-9;
   player_2.hitbox_max=NUM_LEDS-1;
-  player_2.boundary=NUM_LEDS-9;
+  player_2.hit_boundary=NUM_LEDS-9;
   player_1.color = CRGB::Green;
   player_2.color = CRGB::Blue;
   restart.set_pin(RESTART_PIN);
@@ -220,11 +229,11 @@ void loop() {
     screen.advance_ball(ball, player_1, player_2);
   }
   if (player_1.button.is_pressed() && ball.is_inside_hitbox(player_1)) {
-    ball.reverse_direction();
+    ball.hit();
     ball.calc_speedup(player_1);
   }
   if (player_2.button.is_pressed() && ball.is_inside_hitbox(player_2)) {
-    ball.reverse_direction();
+    ball.hit();
     ball.calc_speedup(player_2);
   }
 }
