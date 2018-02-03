@@ -59,6 +59,9 @@ struct Player {
   uint8_t lifes = 8;
   uint8_t hitbox_min;
   uint8_t hitbox_max;
+  bool serve;
+  unsigned long time = 0;
+  unsigned long serve_time = 3000;
   CRGB lifes_color;
   CRGB lost_lifes_color;
   Button button;
@@ -94,7 +97,7 @@ class Ball {
     void increase_speed() {
       speed *= 1.05;
     }
-
+  
     void init(int8_t p, double s, int8_t d) {
       position = p;
       speed = s;
@@ -105,7 +108,7 @@ class Ball {
     Ball() {
       init(0,0.2,1);
     }
-  
+
     bool is_inside_hitbox(Player &player) {
       if ( player.hitbox_min <= position && position <= player.hitbox_max ) {
         return true;
@@ -188,6 +191,12 @@ class Screen {
     Screen() {
       init();
     }
+
+    void show_score(Player &p1, Player &p2) {
+      draw_player_score(p1);
+      draw_player_score(p2);
+      FastLED.show();
+    }
     
     void advance_ball(Ball &b, Player &p1, Player &p2) {
       leds[b.get_position()] = CRGB::Black;
@@ -201,23 +210,54 @@ class Screen {
     }
 };
 
-enum class Pong {
+enum State {
   IDLE = 0,
-  PLAY
-} pong;
-
-enum class Match {
-  SERVE_P1 = 0,
-  SERVE_P2
-  
-} match;
+  DEMO,
+  PLAYING,
+  SERVE,
+  WIN
+};
 
 Player player_1;
 Player player_2;
 Button restart;
-
 Screen screen;
 Ball ball;
+State state = IDLE;
+
+void game_logic() {
+  switch(state) {
+    case IDLE:
+      if (restart.is_pressed()) {
+        state = SERVE;
+        player_1.serve_time = millis();
+      }
+      break;
+    case DEMO:
+      break;
+    case SERVE:
+      screen.show_score(player_1, player_2);
+      if ( millis() - player_1.time >= player_1.serve_time ) {
+        state = PLAYING;
+      }
+      break;
+    case PLAYING:
+      if (ball.timer()) {
+        screen.advance_ball(ball, player_1, player_2);
+      }
+      if (player_1.button.is_pressed() && ball.is_inside_hitbox(player_1)) {
+        ball.hit();
+        ball.calc_speedup(player_1);
+      }
+      if (player_2.button.is_pressed() && ball.is_inside_hitbox(player_2)) {
+        ball.hit();
+        ball.calc_speedup(player_2);
+      }
+      break;
+    case WIN: break;
+    default: break;
+  }
+}
 
 void setup() {
   player_1.button.set_pin(PLAYER1_PIN);
@@ -234,23 +274,18 @@ void setup() {
   player_1.lost_lifes_color = CRGB::Black;
   player_2.lifes_color = CRGB::Blue;
   player_2.lost_lifes_color = CRGB::Black;
+
+  player_1.serve = true;
+  player_1.serve = false;
   
   restart.set_pin(RESTART_PIN);
+  restart.set_lock_time(1000);
 
   Serial.begin( 9600 );
   Serial.println("Starting Pong!");
+
 }
 
 void loop() {
-  if (ball.timer()) {
-    screen.advance_ball(ball, player_1, player_2);
-  }
-  if (player_1.button.is_pressed() && ball.is_inside_hitbox(player_1)) {
-    ball.hit();
-    ball.calc_speedup(player_1);
-  }
-  if (player_2.button.is_pressed() && ball.is_inside_hitbox(player_2)) {
-    ball.hit();
-    ball.calc_speedup(player_2);
-  }
+  game_logic();
 }
