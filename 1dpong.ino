@@ -11,6 +11,7 @@
 // Player settings
 const uint8_t LIFES = 8;
 const uint16_t BUTTON_LOCK_TIME = 1000;
+const uint16_t RESTART_LOCK_TIME = 1000;
 
 // FastLED settings
 const uint8_t NUM_LEDS = 60;
@@ -36,7 +37,7 @@ enum State {
 Player player_1(LIFES, 0, 7, PLAYER1_PIN, BUTTON_LOCK_TIME, CRGB::Green, CRGB::Black);
 Player player_2(LIFES, NUM_LEDS-8, NUM_LEDS-1, PLAYER2_PIN, BUTTON_LOCK_TIME, CRGB::Blue, CRGB::Black);
 
-Button restart;
+Button restart(RESTART_PIN, RESTART_LOCK_TIME);
 Screen screen(BRIGHTNESS, NUM_LEDS);
 Ball ball;
 State state = IDLE;
@@ -76,10 +77,10 @@ void game_logic() {
 }
 
 void setup() {
-
+/*
   restart.set_pin(RESTART_PIN);
   restart.set_lock_time(1000);
-
+*/
   Serial.begin( 9600 );
   Serial.println("Starting Pong!");
 

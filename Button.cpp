@@ -1,5 +1,13 @@
 #include "Button.h"
 
+Button::Button() {
+}
+
+Button::Button(uint8_t pin, uint16_t lock_time) {
+  this->pin = pin;
+  this->lock_time = lock_time;
+}
+
 void Button::update_state(){
   if ( digitalRead(pin) == HIGH && millis() - time >= lock_time ) {
       current_state = BUTTON_PRESSED;

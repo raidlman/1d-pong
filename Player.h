@@ -22,7 +22,7 @@ class Player {
     unsigned long time = 0;
     unsigned long serve_time = 3000;
 
-    Player(uint8_t initial_lifes, uint8_t min, uint8_t max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_col, CRGB lost_lifes_col);
+    Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_color, CRGB lost_lifes_color);
 };
 
 #endif

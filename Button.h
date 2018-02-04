@@ -27,6 +27,9 @@ class Button {
     void set_pin(uint8_t p);
     void set_lock_time(double t);
     bool is_pressed();
+
+    Button();
+    Button(uint8_t pin, uint16_t lock_time);
 };
 
 #endif
