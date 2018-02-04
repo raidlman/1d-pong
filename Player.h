@@ -12,15 +12,17 @@
 
 class Player {
   public:
-    uint8_t lifes = 8;
-    uint8_t hitbox_min;
-    uint8_t hitbox_max;
-    bool serve;
+		uint8_t lifes;
+		uint8_t hitbox_min;
+	  uint8_t hitbox_max;
+	  Button button;
+	  bool serve;
+	  CRGB lifes_color;
+    CRGB lost_lifes_color;
     unsigned long time = 0;
     unsigned long serve_time = 3000;
-    CRGB lifes_color;
-    CRGB lost_lifes_color;
-    Button button;
+
+    Player(uint8_t initial_lifes, uint8_t min, uint8_t max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_col, CRGB lost_lifes_col);
 };
 
 #endif

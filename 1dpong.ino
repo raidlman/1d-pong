@@ -8,17 +8,21 @@
 #include "Player.h"
 #include "Screen.h"
 
+// Player settings
+const uint8_t LIFES = 8;
+const uint16_t BUTTON_LOCK_TIME = 1000;
+
 // FastLED settings
-const uint8_t NUM_LEDS=60;
-const double STRIPE_LENGTH=1.0;
-const EOrder LED_COLOR_ORDER=BGR;
-const ESPIChipsets LED_TYPE=APA102;
-const uint8_t BRIGHTNESS=64; //max. 255
+const uint8_t NUM_LEDS = 60;
+const double STRIPE_LENGTH = 1.0;
+const EOrder LED_COLOR_ORDER = BGR;
+const ESPIChipsets LED_TYPE = APA102;
+const uint8_t BRIGHTNESS = 64; //max. 255
 
 // Digital pins settings
-const uint8_t RESTART_PIN=7;
-const uint8_t PLAYER1_PIN=8;
-const uint8_t PLAYER2_PIN=9;
+const uint8_t RESTART_PIN = 7;
+const uint8_t PLAYER1_PIN = 8;
+const uint8_t PLAYER2_PIN = 9;
 
 enum State {
   IDLE = 0,
@@ -28,8 +32,10 @@ enum State {
   WIN
 };
 
-Player player_1;
-Player player_2;
+
+Player player_1(LIFES, 0, 7, PLAYER1_PIN, BUTTON_LOCK_TIME, CRGB::Green, CRGB::Black);
+Player player_2(LIFES, NUM_LEDS-8, NUM_LEDS-1, PLAYER2_PIN, BUTTON_LOCK_TIME, CRGB::Blue, CRGB::Black);
+
 Button restart;
 Screen screen(BRIGHTNESS, NUM_LEDS);
 Ball ball;
@@ -70,24 +76,7 @@ void game_logic() {
 }
 
 void setup() {
-  player_1.button.set_pin(PLAYER1_PIN);
-  player_2.button.set_pin(PLAYER2_PIN);
-  player_1.button.set_lock_time(1000);
-  player_2.button.set_lock_time(1000);
-  
-  player_1.hitbox_min=0;
-  player_1.hitbox_max=7;
-  player_2.hitbox_min=NUM_LEDS-8;
-  player_2.hitbox_max=NUM_LEDS-1;
-  
-  player_1.lifes_color = CRGB::Green;
-  player_1.lost_lifes_color = CRGB::Black;
-  player_2.lifes_color = CRGB::Blue;
-  player_2.lost_lifes_color = CRGB::Black;
 
-  player_1.serve = true;
-  player_1.serve = false;
-  
   restart.set_pin(RESTART_PIN);
   restart.set_lock_time(1000);
 
