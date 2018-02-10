@@ -29,7 +29,9 @@ Ball::Ball(int8_t position, uint8_t min_position, uint8_t max_position, double s
   this->min_position = min_position;
   this->max_position = max_position;
   this->speed = speed;
+  this->initial_speed = speed;
   this->direction = direction;
+  speedup = 0.0;
 }
 
 bool Ball::is_inside_hitbox(Player &player) {
@@ -77,14 +79,11 @@ void Ball::advance() {
   position += direction;
 }
 
-/*
-void Ball::advance() {
-  leds[b.get_position()] = CRGB::Black;
+void Ball::serve(Player player) {
   
-  draw_player_score(p1);
-  draw_player_score(p2);
-  
-  b.set_position(b.get_position() + b.get_direction());
-  leds[b.get_position()] = CRGB::White;
 }
-*/
+
+void Ball::reset_speedup() {
+  speed = initial_speed;
+  speedup = 0.0;
+}

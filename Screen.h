@@ -25,7 +25,7 @@ class Screen {
     void draw_ball(uint8_t num);
     
   public:
-    Screen(uint8_t brightness, uint8_t num_leds);
+    Screen(uint8_t num_leds, uint8_t brightness);
 
     void show_score(Player &p1, Player &p2);
     void advance_ball(Ball &b, Player &p1, Player &p2);

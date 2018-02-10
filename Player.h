@@ -13,6 +13,7 @@
 class Player {
   public:
 		uint8_t lifes;
+		uint8_t initial_lifes;
 		uint8_t hitbox_min;
 	  uint8_t hitbox_max;
 	  Button button;
@@ -23,6 +24,7 @@ class Player {
     unsigned long serve_time = 3000;
 
     Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_color, CRGB lost_lifes_color);
+    void lose_life();
 };
 
 #endif

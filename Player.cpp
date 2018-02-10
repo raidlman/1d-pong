@@ -6,6 +6,11 @@ Player::Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t in
 	this->hitbox_max = hitbox_max;
 	this->lifes_color = lifes_color;
   this->lost_lifes_color = lost_lifes_color;
+  initial_lifes = lifes;
   button.set_pin(input_pin);
   button.set_lock_time(lock_time);
+}
+
+void Player::lose_life() {
+  lifes -= 1;
 }

@@ -15,7 +15,8 @@ class Ball {
     int8_t position, previous_position;
     uint8_t min_position, max_position;
     double speed;
-    double speedup = 0.0;
+    double initial_speed;
+    double speedup;
     int8_t direction;
     unsigned long time;
 
@@ -23,7 +24,6 @@ class Ball {
     
     // convert speed (in m/s) to timer delay
     uint16_t speed_to_timer();
-    void reverse_direction();
     void increase_speed();
     
   public:
@@ -35,10 +35,13 @@ class Ball {
     int8_t get_previous_position();
     void set_position(int8_t p);
     int8_t get_direction();
+    void reverse_direction();
     void hit();
     void advance();
 
-    void calc_speedup(Player p);
+    void calc_speedup(Player player);
+    void reset_speedup();
+    void serve(Player player);
 };
 
 #endif

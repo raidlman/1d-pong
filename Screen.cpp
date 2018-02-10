@@ -19,14 +19,14 @@ void Screen::init() {
 
 void Screen::draw_player_score(Player p){
   for (uint8_t i=p.hitbox_min; i<=p.hitbox_max; i++) {
-    if ( i < 29 ) {
-      if ( i < (8 - p.lifes)) {
+    if ( i < (num_leds/2 - 1) ) {
+      if ( i < ( p.initial_lifes - p.lifes )) {
         leds[i] = p.lost_lifes_color;
       } else {
         leds[i] = p.lifes_color;
       }
     } else {
-      if ( i <= ( 51 + p.lifes )) {
+      if ( i < ( num_leds - p.initial_lifes + p.lifes )) {
         leds[i] = p.lifes_color;
       } else {
         leds[i] = p.lost_lifes_color;
@@ -35,7 +35,7 @@ void Screen::draw_player_score(Player p){
   }
 }
 
-Screen::Screen(uint8_t brightness, uint8_t num_leds) : leds(new CRGB[num_leds]) {
+Screen::Screen(uint8_t num_leds, uint8_t brightness) : leds(new CRGB[num_leds]) {
   //led_type = type;
   //led_color_order = order;
   this->brightness = brightness;
