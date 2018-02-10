@@ -21,12 +21,15 @@ class Screen {
 
     void init();
     void draw_player_score(Player p);
+    void clear(uint8_t num);
+    void draw_ball(uint8_t num);
     
   public:
-    Screen(uint8_t bright, uint8_t num);
+    Screen(uint8_t brightness, uint8_t num_leds);
 
     void show_score(Player &p1, Player &p2);
     void advance_ball(Ball &b, Player &p1, Player &p2);
+    void draw(Player &player_1, Player &player_2, Ball &ball);
 };
 
 #endif

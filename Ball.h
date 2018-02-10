@@ -12,7 +12,8 @@
 class Ball {
   private:
   
-    int8_t position;
+    int8_t position, previous_position;
+    uint8_t min_position, max_position;
     double speed;
     double speedup = 0.0;
     int8_t direction;
@@ -24,17 +25,18 @@ class Ball {
     uint16_t speed_to_timer();
     void reverse_direction();
     void increase_speed();
-    void init(int8_t position, double speed, int8_t direction);
     
   public:
-    Ball();
+    Ball(int8_t position, uint8_t min_position, uint8_t max_position, double speed, int8_t direction);
 
     bool is_inside_hitbox(Player &player);
     bool timer();
     int8_t get_position();
+    int8_t get_previous_position();
     void set_position(int8_t p);
     int8_t get_direction();
     void hit();
+    void advance();
 
     void calc_speedup(Player p);
 };
