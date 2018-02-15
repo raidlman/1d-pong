@@ -17,13 +17,13 @@ void Button::update_state(){
   }
 }
 
-void Button::set_pin (uint8_t p) {
-  pin = p;
-  pinMode(p, INPUT);
+void Button::set_pin (uint8_t pin) {
+  this->pin = pin;
+  pinMode(pin, INPUT);
 }
 
-void Button::set_lock_time(double t) {
-  lock_time = t;
+void Button::set_lock_time(double time) {
+  lock_time = time;
 }
 
 bool Button::is_pressed() {

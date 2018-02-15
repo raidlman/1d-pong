@@ -12,26 +12,14 @@ const uint16_t RESTART_LOCK_TIME = 1000;
 // FastLED settings
 const uint8_t NUM_LEDS = 60;
 const double STRIPE_LENGTH = 1.0;
-const EOrder LED_COLOR_ORDER = BGR;
-const ESPIChipsets LED_TYPE = APA102;
+//const EOrder LED_COLOR_ORDER = BGR;
+//const ESPIChipsets LED_TYPE = APA102;
 const uint8_t BRIGHTNESS = 64; //max. 255
 
 // Digital pins settings
 const uint8_t RESTART_PIN = 7;
 const uint8_t PLAYER1_PIN = 8;
 const uint8_t PLAYER2_PIN = 9;
-
-
-
-/*
-enum State {
-  IDLE = 0,
-  DEMO,
-  PLAYING,
-  SERVE,
-  WIN
-};
-*/
 
 Pong pong(PLAYER1_PIN, PLAYER2_PIN, LIFES, BUTTON_LOCK_TIME,
   NUM_LEDS, STRIPE_LENGTH, BRIGHTNESS,

@@ -39,7 +39,7 @@ class Ball {
     void hit();
     void advance();
 
-    void calc_speedup(Player player);
+    void calc_speedup(Player &player);
     void reset_speedup();
     void serve(Player player);
 };

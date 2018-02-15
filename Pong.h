@@ -20,6 +20,7 @@ class Pong {
 		  uint8_t restart_pin, uint16_t restart_lock_time);
 
 		Button restart;
+		Player* players[2];
 		Player player_1;
 		Player player_2;
 		Screen screen;
@@ -28,15 +29,18 @@ class Pong {
     void game_logic();
 
 	private:
-		/*
     enum State {
       IDLE = 0,
       DEMO,
       PLAYING,
       SERVE,
       WIN
-    } state = IDLE;
-    */
+    } state;
+    unsigned long time;
+    unsigned long time2;
+    uint16_t auto_serve_timeout;
+    uint8_t active_player;
+    bool ball_is_in_legit_position;
 };
 
 #endif

@@ -57,8 +57,8 @@ int8_t Ball::get_previous_position() {
   return previous_position;
 }
 
-void Ball::set_position(int8_t p) {
-  position = p;
+void Ball::set_position(int8_t position) {
+  this->position = position;
 }
 
 int8_t Ball::get_direction() {
@@ -70,8 +70,8 @@ void Ball::hit() {
   increase_speed();
 }
 
-void Ball::calc_speedup(Player p) {
-  speedup = distance_to_field_boundary(p)/10.0;
+void Ball::calc_speedup(Player &player) {
+  speedup = distance_to_field_boundary(player)/10.0;
 }
 
 void Ball::advance() {

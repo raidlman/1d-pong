@@ -17,15 +17,15 @@ class Button {
   private:
     ButtonState current_state;
     uint8_t pin;
-    bool lock;
+    bool locked;
     unsigned long time;
     unsigned long lock_time;
 
     void update_state();
 
   public:
-    void set_pin(uint8_t p);
-    void set_lock_time(double t);
+    void set_pin(uint8_t pin);
+    void set_lock_time(double time);
     bool is_pressed();
 
     Button();
