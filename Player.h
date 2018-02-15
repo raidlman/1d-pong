@@ -25,7 +25,8 @@ class Player {
 
     Player();
     Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_color, CRGB lost_lifes_color);
-    void lose_life();
+    uint8_t lose_life();
+    void reset_lifes();
     uint8_t get_off_position();
     uint8_t get_autoserve_position();
 };

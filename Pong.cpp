@@ -24,6 +24,10 @@ void Pong::game_logic() {
       if (restart.is_pressed()) {
       	// randomly select active player to serve the first ball
       	active_player = random(0,2);
+
+      	player_1.reset_lifes();
+      	player_2.reset_lifes();
+      	
       	ball.set_position((active_player) ? -1 : 60);
       	ball.set_direction((active_player) ? 1 : -1);
         state = SERVE;  
@@ -34,8 +38,12 @@ void Pong::game_logic() {
       	ball.advance();
       	screen.draw(player_1, player_2, ball);
       }
+
   		if (ball.get_position() < player_1.get_off_position()) {
-  			player_1.lose_life();
+  			if ( player_1.lose_life() == 0 ) {
+  				state = IDLE;
+  				break;
+  			}
   			active_player = 0;
   			screen.show_score(player_1, player_2);
         ball.reverse_direction();
@@ -46,7 +54,10 @@ void Pong::game_logic() {
         break;
   		}
   		if (ball.get_position() > player_2.get_off_position()) {
-  			player_2.lose_life();
+  			if ( player_2.lose_life() == 0 ) {
+  				state = IDLE;
+  				break;
+  			}
   			active_player = 1;
   			screen.show_score(player_1, player_2);
         ball.reverse_direction();
@@ -56,6 +67,8 @@ void Pong::game_logic() {
         time2 = millis();
         break;
   		}
+
+
 
   		for (uint8_t i=0; i<2; i++) {
   			if (players[i]->button.is_pressed() && ball.is_inside_hitbox(*players[i])) {

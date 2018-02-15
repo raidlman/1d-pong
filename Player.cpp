@@ -15,8 +15,9 @@ Player::Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t in
   button.set_lock_time(lock_time);
 }
 
-void Player::lose_life() {
+uint8_t Player::lose_life() {
   lifes -= 1;
+  return lifes;
 }
 
 uint8_t Player::get_off_position() {
@@ -25,4 +26,8 @@ uint8_t Player::get_off_position() {
 
 uint8_t Player::get_autoserve_position() {
 	return (hitbox_min) ? hitbox_min : hitbox_max;
+}
+
+void Player::reset_lifes() {
+	lifes = initial_lifes;
 }
