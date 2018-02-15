@@ -21,9 +21,12 @@ const uint8_t RESTART_PIN = 7;
 const uint8_t PLAYER1_PIN = 8;
 const uint8_t PLAYER2_PIN = 9;
 
+// Random settings
+const uint8_t RANDOM_SEED_PIN = 6;
+
 Pong pong(PLAYER1_PIN, PLAYER2_PIN, LIFES, BUTTON_LOCK_TIME,
   NUM_LEDS, STRIPE_LENGTH, BRIGHTNESS,
-  RESTART_PIN, RESTART_LOCK_TIME);
+  RESTART_PIN, RESTART_LOCK_TIME, RANDOM_SEED_PIN);
 
 void setup() {
   Serial.begin( 9600 );

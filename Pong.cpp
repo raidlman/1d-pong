@@ -2,7 +2,7 @@
 
 Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t button_lock_time,
       uint8_t num_leds, double stripe_length, uint8_t brightness,
-      uint8_t restart_pin, uint16_t restart_lock_time)
+      uint8_t restart_pin, uint16_t restart_lock_time, uint8_t random_seed_pin)
       : player_1(lifes, 0, lifes-1, player_1_pin, button_lock_time, CRGB::Green, CRGB::Red),
         player_2(lifes, num_leds-lifes, num_leds-1, player_2_pin, button_lock_time, CRGB::Blue, CRGB::Red),
         screen(num_leds, brightness),
@@ -14,6 +14,7 @@ Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t b
   state = IDLE;
   auto_serve_timeout = 2000;
   ball_is_in_legit_position = false;
+  randomSeed(analogRead(random_seed_pin));
 }
 
 void Pong::game_logic() {
@@ -21,7 +22,11 @@ void Pong::game_logic() {
     case IDLE:
       screen.show_score(player_1, player_2);
       if (restart.is_pressed()) {
-        state = PLAYING;  
+      	// randomly select active player to serve the first ball
+      	active_player = random(0,2);
+      	ball.set_position((active_player) ? -1 : 60);
+      	ball.set_direction((active_player) ? 1 : -1);
+        state = SERVE;  
       }
       break;
     case PLAYING:

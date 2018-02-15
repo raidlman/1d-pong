@@ -35,6 +35,7 @@ class Ball {
     int8_t get_previous_position();
     void set_position(int8_t p);
     int8_t get_direction();
+    void set_direction(uint8_t direction);
     void reverse_direction();
     void hit();
     void advance();

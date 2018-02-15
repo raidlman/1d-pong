@@ -61,6 +61,10 @@ void Ball::set_position(int8_t position) {
   this->position = position;
 }
 
+void Ball::set_direction(uint8_t direction) {
+  this->direction = direction;
+}
+
 int8_t Ball::get_direction() {
   return direction;
 }
