@@ -19,13 +19,6 @@ class Pong {
 		  uint8_t num_leds, double stripe_length, uint8_t brightness,
 		  uint8_t restart_pin, uint16_t restart_lock_time, uint8_t random_seed_pin);
 
-		Button restart;
-		Player* players[2];
-		Player player_1;
-		Player player_2;
-		Screen screen;
-		Ball ball;
-
     void game_logic();
 
 	private:
@@ -36,6 +29,13 @@ class Pong {
       SERVE,
       WIN
     } state;
+
+		Button restart;
+		Player* players[2];
+		Player player_1;
+		Player player_2;
+		Screen screen;
+		Ball ball;
 
     unsigned long autoserve_time;
     unsigned long autoserve_step_time;
