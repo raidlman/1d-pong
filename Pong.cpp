@@ -13,23 +13,51 @@ Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t b
 	players[1] = &player_2;
   state = IDLE;
   auto_serve_timeout = 2000;
-  ball_is_in_legit_position = false;
+  position_is_legit = false;
   randomSeed(analogRead(random_seed_pin));
 }
 
+void Pong::prepare_next_serve() {
+  ball.reverse_direction();
+  ball.reset_speedup();
+  time = millis();
+  time2 = millis();
+  state = SERVE;
+}
+
+void Pong::choose_random_player() {
+	// randomly select active player to serve the first ball
+	active_player = random(0,2);
+	ball.set_position((active_player) ? -1 : 60);
+	ball.set_direction((active_player) ? 1 : -1);
+}
+
+bool Pong::timer() {
+	return (millis() - time <= auto_serve_timeout);
+}
+
+bool Pong::timer2() {
+	return (millis() - time2 >= (2000/8));
+}
+
+bool Pong::ball_is_in_legit_position() {
+	return (ball.get_position() < player_1.get_autoserve_position() || ball.get_position() > player_2.get_autoserve_position());
+}
+
 void Pong::game_logic() {
+	if (restart.is_pressed()) {
+		screen.clear(ball);
+    state = IDLE;
+	}
   switch(state) {
     case IDLE:
       screen.show_score(player_1, player_2);
       if (restart.is_pressed()) {
-      	// randomly select active player to serve the first ball
-      	active_player = random(0,2);
+      	choose_random_player();
 
       	player_1.reset_lifes();
       	player_2.reset_lifes();
-      	
-      	ball.set_position((active_player) ? -1 : 60);
-      	ball.set_direction((active_player) ? 1 : -1);
+      	      	
         state = SERVE;  
       }
       break;
@@ -46,13 +74,10 @@ void Pong::game_logic() {
   			}
   			active_player = 0;
   			screen.show_score(player_1, player_2);
-        ball.reverse_direction();
-        ball.reset_speedup();
-        state = SERVE;
-        time = millis();
-        time2 = millis();
+  			prepare_next_serve();
         break;
   		}
+
   		if (ball.get_position() > player_2.get_off_position()) {
   			if ( player_2.lose_life() == 0 ) {
   				state = IDLE;
@@ -60,15 +85,9 @@ void Pong::game_logic() {
   			}
   			active_player = 1;
   			screen.show_score(player_1, player_2);
-        ball.reverse_direction();
-        ball.reset_speedup();
-        state = SERVE;
-        time = millis();
-        time2 = millis();
+        prepare_next_serve();
         break;
   		}
-
-
 
   		for (uint8_t i=0; i<2; i++) {
   			if (players[i]->button.is_pressed() && ball.is_inside_hitbox(*players[i])) {
@@ -80,9 +99,9 @@ void Pong::game_logic() {
       break;
     case SERVE:
     	// as long as auto_serve_timeout isn't reached, advance ball and calculate speedup for current position
-      if ( millis() - time <= auto_serve_timeout ) {
-        if ((ball.get_position() < player_1.get_autoserve_position() || ball.get_position() > player_2.get_autoserve_position()) && millis() - time2 >= (2000/8)) {
-        	ball_is_in_legit_position = true;
+      if ( timer() ) {
+        if ( ball_is_in_legit_position() && timer2()) {
+        	position_is_legit = true;
           ball.advance();
           ball.calc_speedup(*players[active_player]);
           time2 = millis();
@@ -90,13 +109,13 @@ void Pong::game_logic() {
       } else {
         ball.reset_speedup();
         // reset flag
-        ball_is_in_legit_position = false;
+        position_is_legit = false;
         state = PLAYING;
       }
       // Wait at least one loop for ball to come back in the court ()
-      if (players[active_player]->button.is_pressed() && ball_is_in_legit_position) {
+      if (players[active_player]->button.is_pressed() && position_is_legit) {
         // reset flag
-        ball_is_in_legit_position = false;
+        position_is_legit = false;
         state = PLAYING;
       }
       break;

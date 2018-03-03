@@ -62,8 +62,12 @@ void Screen::advance_ball(Ball &b, Player &p1, Player &p2) {
   FastLED.show();
 }
 
-void Screen::clear(uint8_t num) {
+void Screen::clear_led(uint8_t num) {
   leds[num] = CRGB::Black;
+}
+
+void Screen::clear(Ball &ball) {
+  clear_led(ball.get_position());
 }
 
 void Screen::draw_ball(uint8_t num) {
@@ -71,7 +75,7 @@ void Screen::draw_ball(uint8_t num) {
 }
 
 void Screen::draw(Player &player_1, Player &player_2, Ball &ball) {
-  clear(ball.get_previous_position());
+  clear_led(ball.get_previous_position());
   draw_player_score(player_1);
   draw_player_score(player_2);
   draw_ball(ball.get_position());
