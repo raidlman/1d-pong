@@ -12,6 +12,9 @@
 
 class Player {
   public:
+  	Player();
+    Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_color, CRGB lost_lifes_color);
+  	
 		uint8_t lifes;
 		uint8_t initial_lifes;
 		uint8_t hitbox_min;
@@ -23,8 +26,7 @@ class Player {
     unsigned long time = 0;
     unsigned long serve_time = 3000;
 
-    Player();
-    Player(uint8_t lifes, uint8_t hitbox_min, uint8_t hitbox_max, uint8_t input_pin, uint16_t lock_time, CRGB lifes_color, CRGB lost_lifes_color);
+    
     uint8_t lose_life();
     void reset_lifes();
     uint8_t get_off_position();
