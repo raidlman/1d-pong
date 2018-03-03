@@ -13,15 +13,15 @@ Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t b
 	players[1] = &player_2;
   state = IDLE;
   auto_serve_timeout = 2000;
-  position_is_legit = false;
+  position_is_allowed = false;
   randomSeed(analogRead(random_seed_pin));
 }
 
 void Pong::prepare_next_serve() {
   ball.reverse_direction();
   ball.reset_speedup();
-  time = millis();
-  time2 = millis();
+  autoserve_time = millis();
+  autoserve_step_time = millis();
   state = SERVE;
 }
 
@@ -32,15 +32,15 @@ void Pong::choose_random_player() {
 	ball.set_direction((active_player) ? 1 : -1);
 }
 
-bool Pong::timer() {
-	return (millis() - time <= auto_serve_timeout);
+bool Pong::autoserve_timer() {
+	return (millis() - autoserve_time <= auto_serve_timeout);
 }
 
-bool Pong::timer2() {
-	return (millis() - time2 >= (2000/8));
+bool Pong::autoserve_step_timer() {
+	return (millis() - autoserve_step_time >= (2000/8));
 }
 
-bool Pong::ball_is_in_legit_position() {
+bool Pong::ball_is_in_allowed_position() {
 	return (ball.get_position() < player_1.get_autoserve_position() || ball.get_position() > player_2.get_autoserve_position());
 }
 
@@ -99,23 +99,23 @@ void Pong::game_logic() {
       break;
     case SERVE:
     	// as long as auto_serve_timeout isn't reached, advance ball and calculate speedup for current position
-      if ( timer() ) {
-        if ( ball_is_in_legit_position() && timer2()) {
-        	position_is_legit = true;
+      if ( autoserve_timer() ) {
+        if ( ball_is_in_allowed_position() && autoserve_step_timer()) {
+        	position_is_allowed = true;
           ball.advance();
           ball.calc_speedup(*players[active_player]);
-          time2 = millis();
+          autoserve_step_time = millis();
         }
       } else {
         ball.reset_speedup();
         // reset flag
-        position_is_legit = false;
+        position_is_allowed = false;
         state = PLAYING;
       }
       // Wait at least one loop for ball to come back in the court ()
-      if (players[active_player]->button.is_pressed() && position_is_legit) {
+      if (players[active_player]->button.is_pressed() && position_is_allowed) {
         // reset flag
-        position_is_legit = false;
+        position_is_allowed = false;
         state = PLAYING;
       }
       break;

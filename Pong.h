@@ -37,15 +37,15 @@ class Pong {
       WIN
     } state;
 
-    unsigned long time;
-    unsigned long time2;
+    unsigned long autoserve_time;
+    unsigned long autoserve_step_time;
     uint16_t auto_serve_timeout;
     uint8_t active_player;
-    bool position_is_legit;
+    bool position_is_allowed;
     void prepare_next_serve();
-    bool timer();
-    bool timer2();
-    bool ball_is_in_legit_position();
+    bool autoserve_timer();
+    bool autoserve_step_timer();
+    bool ball_is_in_allowed_position();
     void choose_random_player();
 };
 
