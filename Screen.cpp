@@ -23,7 +23,7 @@
 void Screen::init() {
   // set chipset type, color order of LEDs and number of LEDs on stripe
   //FastLED.addLeds<led_type, led_color_order>(leds, num_leds);
-  FastLED.addLeds<APA102, BGR>(leds, num_leds);
+  FastLED.addLeds<APA102, BGR>(leds, num_leds).setCorrection( TypicalLEDStrip );
   
   // set global brightness
   FastLED.setBrightness( brightness );
