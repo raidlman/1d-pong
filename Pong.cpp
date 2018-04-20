@@ -30,9 +30,10 @@ Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t b
 {
 	players[0] = &player_1;
 	players[1] = &player_2;
-  state = IDLE;
+  state = WAITING;
   auto_serve_timeout = 2000;
   position_is_allowed = false;
+  waiting_time = millis();
   randomSeed(analogRead(random_seed_pin));
 }
 
@@ -66,18 +67,31 @@ bool Pong::ball_is_in_allowed_position() {
 void Pong::game_logic() {
 	if (restart.is_pressed()) {
 		screen.clear(ball);
-    state = IDLE;
+    waiting_time = millis();
+    state = WAITING;
 	}
   switch(state) {
-    case IDLE:
+    case WAITING:
       screen.show_score(player_1, player_2);
       if (restart.is_pressed()) {
-      	choose_random_player();
+        choose_random_player();
 
-      	player_1.reset_lifes();
-      	player_2.reset_lifes();
-      	      	
+        player_1.reset_lifes();
+        player_2.reset_lifes();
+        screen.reset(player_1, player_2);
+
         state = SERVE;  
+      }
+      if (millis() - waiting_time >= 30000) {
+        state = IDLE;
+      }
+      break;
+    case IDLE:
+      screen.show_color_palette();
+      if (restart.is_pressed()) {
+        screen.reset(player_1, player_2);
+        waiting_time = millis();
+        state = WAITING;  
       }
       break;
     case PLAYING:
@@ -88,7 +102,9 @@ void Pong::game_logic() {
 
   		if (ball.get_position() < player_1.get_off_position()) {
   			if ( player_1.lose_life() == 0 ) {
-  				state = IDLE;
+          screen.reset(player_1, player_2);
+          waiting_time = millis();
+  				state = WAITING;
   				break;
   			}
   			active_player = 0;
@@ -99,7 +115,9 @@ void Pong::game_logic() {
 
   		if (ball.get_position() > player_2.get_off_position()) {
   			if ( player_2.lose_life() == 0 ) {
-  				state = IDLE;
+          screen.reset(player_1, player_2);
+          waiting_time = millis();
+  				state = WAITING;
   				break;
   			}
   			active_player = 1;

@@ -29,6 +29,9 @@
 #include "Ball.h"
 #include "Player.h"
 
+extern CRGBPalette16 myRedWhiteBluePalette;
+extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
+
 class Screen {
   public:
     Screen(uint8_t num_leds, uint8_t brightness);
@@ -37,6 +40,14 @@ class Screen {
     void advance_ball(Ball &b, Player &p1, Player &p2);
     void draw(Player &player_1, Player &player_2, Ball &ball);
     void clear(Ball &ball);
+    void reset(Player &p1, Player &p2);
+
+    void show_color_palette();
+    void FillLEDsFromPaletteColors(uint8_t colorIndex);
+    void ChangePalettePeriodically();
+    void SetupTotallyRandomPalette();
+    void SetupBlackAndWhiteStripedPalette();
+    void SetupPurpleAndGreenPalette();
 
   private:
     uint8_t num_leds;
@@ -44,10 +55,14 @@ class Screen {
     //ESPIChipsets led_type;
     //EOrder led_color_order;
     uint8_t brightness;
+    uint8_t color_pallette_updates_per_second;
+    CRGBPalette16 currentPalette;
+    TBlendType currentBlending;
 
     void init();
     void draw_player_score(Player p);
     void clear_led(uint8_t num);
+    void clear_all_leds();
     void draw_ball(uint8_t num);
 };
 

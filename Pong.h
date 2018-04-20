@@ -45,7 +45,7 @@ class Pong {
       DEMO,
       PLAYING,
       SERVE,
-      WIN
+      WAITING
     } state;
 
 		Button restart;
@@ -57,6 +57,7 @@ class Pong {
 
     unsigned long autoserve_time;
     unsigned long autoserve_step_time;
+    unsigned long waiting_time;
     uint16_t auto_serve_timeout;
     uint8_t active_player;
     bool position_is_allowed;
