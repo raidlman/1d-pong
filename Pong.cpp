@@ -48,8 +48,8 @@ void Pong::prepare_next_serve() {
 void Pong::choose_random_player() {
 	// randomly select active player to serve the first ball
 	active_player = random(0,2);
-	ball.set_position((active_player) ? -1 : 60);
-	ball.set_direction((active_player) ? 1 : -1);
+	ball.set_position( (active_player) ? players[0]->hitbox_min -1 : players[1]->hitbox_max +1);
+	ball.set_direction( (active_player) ? 1 : -1);
 }
 
 bool Pong::autoserve_timer() {
