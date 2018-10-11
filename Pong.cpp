@@ -1,4 +1,4 @@
-/*
+ /*
  * 1D Pong - Pong-like game run on an Arduino MCU
  * Copyright (C) 2018  Stephan Riedel - raidlman@gmail.com
  *
@@ -48,7 +48,7 @@ void Pong::prepare_next_serve() {
 void Pong::choose_random_player() {
 	// randomly select active player to serve the first ball
 	active_player = random(0,2);
-	ball.set_position( (active_player) ? players[0]->hitbox_min -1 : players[1]->hitbox_max +1);
+	ball.set_position( (active_player) ? players[0]->hitbox_min : players[1]->hitbox_max);
 	ball.set_direction( (active_player) ? 1 : -1);
 }
 
