@@ -19,6 +19,22 @@ Hardware build instructons & wiring schemes will be published soon!
   - 1x 65x50x35mm IP 65 https://www.boxexpert.de/epages/79711065.sf/de_DE/?ObjectPath=/Shops/79711065/Products/BXPBABS655035-E01
 * 3x Sanwa OBSN-30 pushbutton 
 
+## Schematic
+
+![Schematic](/schematic/schematic.png?raw=true "Schematic")
+
+The wiring is pretty simple.
+
+All electronics are power via the same 5V power supply.
+Make sure to use a supply that can deliver 2A.
+
+There are three push buttons that pull the pin to high when beeing pressed.
+Each button is connected to ground via a pull down resistor.
+
+The input pins of the LED strip are connected to the SPI interface of the arduino.
+CI (clock in) is connected to SCK and DI (data in) is connected to MOSI.
+The power lines are directly connected to the power source.
+
 ## Feature Requests / Ideas from "Lange nacht der Computerspiele / HTWK Leipzig"
 
 * Allow hits one off (+-1 outside of hit box)
