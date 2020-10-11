@@ -25,7 +25,7 @@ Hardware build instructons & wiring schemes will be published soon!
 
 The wiring is pretty simple.
 
-All electronics are power via the same 5V power supply.
+All electronics are powered via the same 5V power supply.
 Make sure to use a supply that can deliver 2A.
 
 There are three push buttons that pull the pin to high when beeing pressed.
