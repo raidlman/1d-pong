@@ -142,8 +142,8 @@ void Screen::FillLEDsFromPaletteColors( uint8_t colorIndex)
 
 void Screen::ChangePalettePeriodically()
 {
-    uint8_t secondHand = (millis() / 1000) % 60;
-    static uint8_t lastSecond = 99;
+    uint8_t secondHand = (millis() / 1000) % 240;
+    static uint8_t lastSecond = 239;
     
     if( lastSecond != secondHand) {
         lastSecond = secondHand;
@@ -156,8 +156,8 @@ void Screen::ChangePalettePeriodically()
         if( secondHand == 35)  { SetupBlackAndWhiteStripedPalette();       currentBlending = LINEARBLEND; }
         if( secondHand == 40)  { currentPalette = CloudColors_p;           currentBlending = LINEARBLEND; }
         if( secondHand == 45)  { currentPalette = PartyColors_p;           currentBlending = LINEARBLEND; }
-        if( secondHand == 50)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = NOBLEND;  }
-        if( secondHand == 55)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = LINEARBLEND; }
+        if( secondHand == 230)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = NOBLEND;  }
+        if( secondHand == 235)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = LINEARBLEND; }
     }
 }
 
