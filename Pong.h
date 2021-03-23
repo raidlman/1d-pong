@@ -54,6 +54,7 @@ class Pong {
 		Player player_2;
 		Screen screen;
 		Ball ball;
+		bool isFirstRun;
 
     unsigned long autoserve_time;
     unsigned long autoserve_step_time;

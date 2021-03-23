@@ -34,6 +34,7 @@ Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t b
   auto_serve_timeout = 2000;
   position_is_allowed = false;
   waiting_time = millis();
+  isFirstRun = true;
   randomSeed(analogRead(random_seed_pin));
 }
 
@@ -48,7 +49,7 @@ void Pong::prepare_next_serve() {
 void Pong::choose_random_player() {
 	// randomly select active player to serve the first ball
 	active_player = random(0,2);
-	ball.set_position((active_player) ? -1 : 60);
+	ball.set_position((active_player) ? players[0]->hitbox_min -1 : players[1]->hitbox_max +1);
 	ball.set_direction((active_player) ? 1 : -1);
 }
 
@@ -73,14 +74,18 @@ void Pong::game_logic() {
   switch(state) {
     case WAITING:
       screen.show_score(player_1, player_2);
-      if (restart.is_pressed()) {
+      if (restart.is_pressed() || (isFirstRun && (millis() - waiting_time >= 5000))) {
         choose_random_player();
 
         player_1.reset_lifes();
         player_2.reset_lifes();
         screen.reset(player_1, player_2);
 
-        state = SERVE;  
+        if (isFirstRun) {
+          isFirstRun = false;
+        }
+
+        state = SERVE;
       }
       if (millis() - waiting_time >= 30000) {
         state = IDLE;
