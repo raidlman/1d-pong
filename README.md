@@ -22,7 +22,7 @@ After 30 seconds without activity the LED strip shows some colorful animations u
 Hardware build instructons & wiring schemes will be published soon!
 
 * 1x Arduino Pro Mini
-  - Adafruit Arduino Pro Mini 5V 16 MHz works, too, including USB power and data support. Separate power supply is not needed in that case. Separate FTDI programmer is not needed, too. The strip can be bus powered straight from the 'bus' pin, which supports 700 mA. This is enough to drive 60 LED's at 80% brightness.
+  - Adafruit Pro Trinket 5V 16 MHz works, too, including USB support! Neither a separate power supply nor a Serial-to-USB-Adapter (FTDI programmer) are needed. The LED strip can be bus powered straight from the 'bus' pin, which supports 700 mA. This is enough to drive 60 LED's at 80% brightness. Beware, pin 7 is not available on this board, but Pins 3-6, Pin 8 and Pins A0-A5 are.
 * 1x APA102-C LED light strip (1m) with 60 LEDs/m
 * 1x 5v power supply (max. 2A)
 * BOXEXPERT ABS casings
