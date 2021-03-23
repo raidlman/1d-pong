@@ -35,6 +35,10 @@ The input pins of the LED strip are connected to the SPI interface of the arduin
 CI (clock in) is connected to SCK and DI (data in) is connected to MOSI.
 The power lines are directly connected to the power source.
 
+## Features
+* Game starts immediately after a few seconds
+  - You might not need a reset button, if you're willing to switch power off and on.
+
 ## Feature Requests / Ideas from "Lange nacht der Computerspiele / HTWK Leipzig"
 
 * Allow hits one off (+-1 outside of hit box)
