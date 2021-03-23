@@ -26,7 +26,7 @@ Pong::Pong(uint8_t player_1_pin, uint8_t player_2_pin, uint8_t lifes, uint16_t b
         player_2(lifes, num_leds-lifes, num_leds-1, player_2_pin, button_lock_time, CRGB::Blue, CRGB::Red),
         screen(num_leds, brightness),
         restart(restart_pin, restart_lock_time),
-        ball(0, 0, num_leds-1, 0.2, 1)
+        ball(0, 0, num_leds-1, 0.2, 1) // 0.2 is the inital speed. An option has been added in Ball.cpp to start with higher speed.
 {
 	players[0] = &player_1;
 	players[1] = &player_2;
@@ -74,6 +74,11 @@ void Pong::game_logic() {
   switch(state) {
     case WAITING:
       screen.show_score(player_1, player_2);
+      /* the game shall start after a few seconds after bootup of the Arduino.
+       * This makes using the reset pin optional,
+       * thus enables the game to be played without a separate reset button.
+       * Drawback: A restart of the game requires a reboot of the Arduino (takes only a few seconds).
+       */
       if (restart.is_pressed() || (isFirstRun && (millis() - waiting_time >= 5000))) {
         choose_random_player();
 
@@ -83,9 +88,11 @@ void Pong::game_logic() {
 
         if (isFirstRun) {
           isFirstRun = false;
+          // During first run one can lower the brightness to play in dark environments.
           if (players[0]->button.is_pressed()) {
             screen.lower_brightness();
           }
+          // During first run one can setup a high speed mode with increased initial_speed.
           if (players[1]->button.is_pressed()) {
             ball.increase_initial_speed();
           }
