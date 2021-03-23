@@ -42,6 +42,7 @@ class Ball {
     void hit();
     void advance();
 
+    void increase_initial_speed();
     void calc_speedup(Player &player);
     void reset_speedup();
     void serve(Player player);

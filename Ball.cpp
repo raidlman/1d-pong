@@ -93,6 +93,10 @@ void Ball::hit() {
   increase_speed();
 }
 
+void Ball::increase_initial_speed() {
+  this->initial_speed = 0.6;
+}
+
 void Ball::calc_speedup(Player &player) {
   speedup = distance_to_field_boundary(player)/10.0;
 }

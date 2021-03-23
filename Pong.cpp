@@ -83,6 +83,12 @@ void Pong::game_logic() {
 
         if (isFirstRun) {
           isFirstRun = false;
+          if (players[0]->button.is_pressed()) {
+            screen.lower_brightness();
+          }
+          if (players[1]->button.is_pressed()) {
+            ball.increase_initial_speed();
+          }
         }
 
         state = SERVE;

@@ -55,6 +55,11 @@ void Screen::draw_player_score(Player p){
   }
 }
 
+void Screen::lower_brightness() {
+    FastLED.setBrightness( 5 );
+    FastLED.show();
+}
+
 Screen::Screen(uint8_t num_leds, uint8_t brightness) : leds(new CRGB[num_leds]) {
   //led_type = type;
   //led_color_order = order;

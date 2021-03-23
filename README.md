@@ -38,6 +38,9 @@ The power lines are directly connected to the power source.
 ## Features
 * Game starts immediately after a few seconds
   - You might not need a reset button, if you're willing to switch power off and on.
+* During first run:
+  - Press Player 1 button to enter low brightness mode for darker environments (late at night, living room, bar/club)
+  - Press Player 2 button to enable high speed mode. Every game starts with increased initial speed.
 
 ## Feature Requests / Ideas from "Lange nacht der Computerspiele / HTWK Leipzig"
 
